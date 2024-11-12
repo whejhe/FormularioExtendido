@@ -1,0 +1,191 @@
+1. ProductList.js
+
+Este componente se encarga de mostrar la lista de productos. La información de los 
+productos se obtiene de una API y cada producto se muestra con su imagen, título, 
+precio y categoría. Cuando el usuario toca un producto, se navega a una nueva vista 
+con los detalles de ese producto.
+
+Flujo y comportamiento:
+
+    Estado de productos:
+        Se inicializa un estado productos usando useState([]), que es un arreglo 
+        vacío al principio.
+        Con el hook useEffect(), se llama a getListaProductos() para obtener los datos 
+        de la API cuando el componente se muesta.
+
+    Llamada a la API:
+        getListaProductos es una función asíncrona que usa fetch() para obtener la lista 
+        de productos desde una API externa (fakestoreapi.com).
+        Una vez que los datos se reciben, se actualiza el estado de productos usando 
+        setListaProductos.
+
+    Renderizado de productos:
+        Los productos se mapean para mostrar un botón pulsable (Pressable) que incluye la 
+        imagen, título, precio y categoría de cada producto.
+        Al pulsar un producto, se navega a la pantalla de detalles (ProductDetails) usando 
+        navigation.navigate("Details", { producto }), pasando los datos del producto seleccionado 
+        como parámetros.
+
+
+ProductDetails.js
+
+Este componente muestra los detalles de un producto específico que fue seleccionado desde la lista.
+
+Flujo y comportamiento:
+
+    Recibir el producto:
+        Los datos del producto se obtienen a través de route.params. Este objeto contiene 
+        el producto que fue seleccionado en ProductList.
+    Renderizado de detalles:
+        Se renderizan los detalles del producto: su imagen, título, descripción, precio y categoría.
+        Todo esto se muestra en un View con algunos estilos para organizar el diseño.
+
+App.js
+
+Este archivo es el núcleo de la aplicación y contiene la configuración de la navegación 
+entre las diferentes pantallas.
+
+Flujo y comportamiento:
+
+    Configuración de navegación:
+        NavigationContainer: Este componente es el contenedor principal para la navegación 
+        de la aplicación. Cualquier navegación debe estar dentro de este componente.
+        Stack.Navigator: Se utiliza para gestionar la navegación entre pantallas de tipo 
+        "stack" (una pantalla apilada sobre otra).
+        Se definen dos pantallas dentro del stack: ProductList y ProductDetails.
+
+    Rutas de la aplicación:
+        ProductList: Es la pantalla inicial (initialRouteName="ProductList"), donde se muestra 
+        la lista de productos.
+        ProductDetails: Es la pantalla que se muestra cuando se navega hacia los detalles 
+        de un producto (se navega con navigation.navigate("Details", { producto })).
+
+Resumen del flujo:
+
+    La aplicación comienza en la pantalla de lista de productos (ProductList), que realiza 
+    una llamada a la API para obtener y mostrar los productos.
+    Al pulsar un producto, se navega a la pantalla de detalles (ProductDetails), pasando 
+    la información del producto seleccionado.
+    En ProductDetails, se muestran los detalles completos del producto (imagen, título, 
+    descripción, precio y categoría).
+
+
+
+Explicacion desglosada de ProductList:
+
+1. useState
+
+useState es un hook en React que permite a los componentes funcionales gestionar un estado local. 
+Un "estado" en React es una forma de almacenar y manejar datos que pueden cambiar a lo largo 
+del tiempo (como una lista de productos que llega desde una API).
+
+Explicación:
+
+    productos: Es el nombre de la variable que contiene el estado actual, en este caso, 
+    un array vacío [] cuando el componente se monta por primera vez.
+
+    setListaProductos: Es la función que te permite actualizar el estado de productos. 
+    Cada vez que llames a setListaProductos, estarás actualizando el valor de productos 
+    y forzando a React a re-renderizar el componente con el nuevo valor.
+
+    useState([]): Aquí inicializas productos como un arreglo vacío, lo que significa que 
+    al comienzo el componente no tiene productos que mostrar.
+
+El estado de productos cambia cuando los datos que se obtienen desde la API (ver punto de 
+"llamada a la API" más adelante), y se actualiza llamando a setListaProductos.
+
+
+2. Llamada a la API y response.json()
+
+La función getListaProductos() es asíncrona, y se utiliza para hacer una llamada a una 
+API externa (fakestoreapi.com) y obtener datos de productos. Esta es una función muy común 
+cuando trabajas con datos dinámicos que provienen de servidores externos.
+Explicación:
+
+    async: Define la función como asíncrona, lo que significa que puede utilizar await 
+    para esperar la resolución de promesas (como la respuesta de una API).
+
+    fetch("https://fakestoreapi.com/products"): Esta es una llamada a la API usando el 
+    método fetch, que solicita recursos desde un servidor. En este caso, está solicitando 
+    los productos desde la URL dada.
+
+    await: Pausa la ejecución del código hasta que la promesa se resuelva (es decir, hasta 
+    que la API devuelva una respuesta). Sin await, el código seguiría ejecutándose antes de 
+    que la respuesta de la API estuviera disponible.
+
+    response: Es el objeto que representa la respuesta HTTP de la API. Contiene información 
+    como el estado de la respuesta (si fue exitosa o no) y los datos devueltos.
+
+    response.json(): Convierte la respuesta (que originalmente está en formato JSON) en un 
+    objeto JavaScript que podemos usar. Este método devuelve otra promesa, y por eso utilizamos 
+    await para esperar hasta que los datos estén listos.
+
+    const data = await response.json();: Una vez convertida la respuesta a JSON, se guarda en 
+    la variable data, que contendrá el arreglo de productos que devuelve la API.
+
+    return data;: Finalmente, la función devuelve el arreglo de productos (data), que se 
+    utilizará para actualizar el estado con setListaProductos().
+
+
+3. Renderizado de productos con producto.map()
+
+Una vez que los datos han sido obtenidos de la API y almacenados en el estado productos, 
+los usamos para renderizar dinámicamente cada producto en la pantalla. Aquí entra en juego 
+el método map().
+
+Explicación:
+
+    productos.map():
+        map() es un método que se aplica a arreglos en JavaScript. Recorre cada elemento 
+        del arreglo (en este caso, cada producto), y para cada uno de ellos, ejecuta una 
+        función que retorna un nuevo elemento.
+        En este caso, estamos retornando componentes Pressable (que actúan como botones) 
+        para cada producto en la lista.
+
+    producto:
+        Es cada uno de los objetos dentro del arreglo productos. Cada producto tiene 
+        propiedades como id, image, title, price, y category, que estamos utilizando para 
+        construir la interfaz de usuario.
+
+    key={producto.id}:
+        React necesita una propiedad key única para cada componente en una lista, para poder 
+        realizar un seguimiento eficiente de los cambios en la lista. Aquí usamos producto.id 
+        como la clave única.
+
+    Pressable:
+        Es un componente que actúa como un botón. En este caso, cada producto es un botón 
+        pulsable, y cuando se pulsa, se dispara la función onPress.
+
+    onPress={() => navigation.navigate("Details", { producto })}:
+        Cuando se pulsa un producto, se navega a la pantalla de detalles de ese producto. 
+        Usamos navigation.navigate() para cambiar de pantalla, y pasamos el objeto producto 
+        como parámetro a la pantalla de destino.
+
+    <Image /> y <Text />:
+        Se utilizan para mostrar la imagen, título, precio y categoría del producto. producto.image 
+        es la URL de la imagen del producto, y producto.title, producto.price, y producto.category 
+        son datos que se muestran en textos.
+
+
+Flujo y comportamiento completo:
+
+    Estado inicial y carga de productos:
+        Cuando el componente se monta, se inicializa el estado productos como un arreglo vacío.
+        Luego, con useEffect(), se ejecuta getListaProductos(), que hace una llamada a la API y 
+        obtiene la lista de productos.
+        Una vez que los productos se reciben desde la API, el estado productos se actualiza con 
+        los datos reales de los productos usando setListaProductos().
+
+    Renderizado de productos:
+        Con productos.map(), cada producto se renderiza en la pantalla dentro de un Pressable 
+        (botón pulsable).
+        Se muestran la imagen, el título, el precio y la categoría de cada producto usando 
+        componentes Image y Text.
+
+    Navegación a los detalles:
+        Cuando el usuario pulsa sobre un producto, la función onPress navega a la pantalla de 
+        detalles (ProductDetails) con los datos del producto seleccionado.
+
+En resumen, el useState se usa para manejar el estado local del componente, fetch y 
+response.json() para hacer la llamada a la API y procesar los datos, y map() se utiliza 
+para renderizar dinámicamente cada producto en la interfaz de usuario.

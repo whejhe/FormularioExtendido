@@ -1,0 +1,16 @@
+src/navigation/DrawerNavigator.js
+src/navigation/MainNavigator.js
+src/navigation/AuthNavigator.js
+
+src/screens/Auth/LoginScreen.js
+src/screens/Auth/RegisterScreen.js
+src/screens/Auth/AuthMenu.js
+
+src/screens/ConfigScreen.js
+src/screens/HomeScreen.js
+src/screens/SettingScreen.js
+src/screens/CerrarSesion.js
+src/screens/TestScreen2.js
+
+src/App.js
+src/index.js

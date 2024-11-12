@@ -1,0 +1,35 @@
+Enlaces:
+https://www.youtube.com/watch?v=ONAVmsGW6-M
+https://docs.expo.dev/
+https://firebase.google.com/?hl=es-419
+
+Instalacion Previa: Node, git, Visual studio, npm
+
+Variable de Entorno Android Estudio
+ANDROID_HOME 
+C:\Users\noBody\AppData\Local\Android\Sdk
+path:
+C:\Users\noBody\AppData\Local\Android\Sdk\platforms
+C:\Users\noBody\AppData\Local\Android\Sdk\platform-tools
+
+Crear Proyecto:
+npx create-expo-app LoginYRegistroFirebase -t expo-template-blank
+cd LoginTRegistroFirebase
+npx expo install firebase
+
+Habilitar para web:
+yarn add install react-dom react-native-web @expo/metro-runtime
+
+Habilitar Navegacion:
+npm install @react-navigation/native @react-navigation/native-stack
+npx expo install react-native-screens react-native-safe-area-context
+
+Configurar Metro:
+npx expo customize metro.config.js
+
+Configurar store:
+npm install @react-native-async-storage/async-storage
+
+Comenzar Proyecto:
+npx expo start
+

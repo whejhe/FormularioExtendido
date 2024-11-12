@@ -1,0 +1,75 @@
+Componentes de React Native
+
+    View:
+        Contenedor básico en React Native, similar a div en HTML. Se utiliza para organizar 
+        otros componentes en la interfaz.
+    Text:
+        Componente para mostrar texto. Todos los textos visibles deben estar dentro de un 
+        componente Text.
+    TextInput:
+        Componente para crear campos de entrada de texto. Permite capturar datos del usuario.
+    Button:
+        Botón básico. Al hacer clic, ejecuta una acción, pero no tiene muchas opciones 
+        de personalización.
+    TouchableOpacity:
+        Componente que reacciona a toques, y que puede ser estilizado. Se usa a menudo 
+        como alternativa más flexible al Button.
+    Pressable:
+        Componete que viene a sustituir a Button y TouchableOpacity, completamente 
+        personalizable.
+    FlatList:
+        Componente de lista eficiente para renderizar grandes cantidades de datos de 
+        manera optimizada.
+    ScrollView:
+        Contenedor de desplazamiento que permite hacer scroll si el contenido es mayor 
+        que el tamaño de la pantalla.
+        Nota: Recomendado solo para listas staticas o no muy grandes, scrollview renderiza
+        todos los elementos al mismo tiempo lo que puede causar cuelgues o lentitud en las paginas.
+    SafeAreaView:
+        Garantiza que el contenido de la aplicación no se superponga con áreas sensibles de 
+        la pantalla, como el notch, las barras de estado, las barras de navegación o 
+        los bordes redondeados de algunos dispositivos.
+    Image:
+        Componente para mostrar imágenes. Soporta tanto imágenes locales como remotas 
+        (a través de URLs).
+    StyleSheet:
+        Objeto para definir estilos de los componentes de manera estructurada.
+    Modal:
+    Componente que muestra una ventana emergente superpuesta a la pantalla principal.
+
+
+
+Componentes de Expo
+
+    StatusBar:
+        controla la barra de estado del dispositivo, que es la barra que aparece en la 
+        parte superior de la pantalla y muestra información como la hora, la batería, 
+        la conexión de red, entre otros detalles.
+    AppLoading:
+        Componente de Expo que ayuda a mostrar una pantalla de carga mientras se 
+        cargan los recursos de la aplicación, como fuentes o imágenes.
+    ImagePicker:
+        Herramienta de Expo que permite a los usuarios seleccionar imágenes desde la 
+        galería o capturarlas con la cámara.
+    Audio.Sound:
+        Componente para gestionar la reproducción de sonidos y archivos de audio.
+    Video:
+        Componente de Expo para reproducir vídeos. Soporta múltiples formatos y 
+        opciones de control.
+    MapView:
+        Componente de Expo para mostrar mapas interactivos utilizando Google Maps o Apple Maps.
+    Location:
+        Proveedor de Expo para acceder a la ubicación del dispositivo, útil para obtener 
+        coordenadas GPS.
+    Constants:
+        Proporciona acceso a información sobre el entorno de la aplicación, como la 
+        plataforma, versión de la app, dimensiones de la pantalla, etc.
+    LinearGradient:
+        Componente para crear fondos con degradado de colores. Muy útil para mejorar 
+        la apariencia visual de la app.
+    Permissions:
+        Módulo de Expo para gestionar permisos como el acceso a la cámara, ubicación, 
+        micrófono, etc.
+    Notifications:
+        Herramienta de Expo para enviar y gestionar notificaciones push dentro de la 
+        aplicación.
