@@ -1,5 +1,6 @@
+// app/screens/Login.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Button, KeyboardAvoidingView, StyleSheet, Pressable, Image } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, KeyboardAvoidingView, StyleSheet, Pressable, Image } from 'react-native';
 
 const Login = () => {
 
@@ -12,30 +13,19 @@ const Login = () => {
         try {
             const storedUser = await AsyncStorage.getItem('user');
             const storedUserJson = JSON.parse(storedUser);
-            if (storedUserJson.email === email && storedUserJson.password === password) {
-                setUser(storedUserJson);
-                alert('Sign in successful');
+            if (storedUserJson?.email === email && storedUserJson?.password === password) {
+                alert('Inicio de sesión exitoso');
+                navigation.navigate('List');
             } else {
-                alert('Sign in failed: incorrect email or password');
+                alert('Correo o contraseña incorrectos');
             }
         } catch (error) {
             console.log(error);
-            alert('Sign in failed: ' + error.message);
+            alert('Error al iniciar sesión: ' + error.message);
         }
         setLoading(false);
     };
-
-    const signUp = async () => {
-        setLoading(true);
-        try {
-            alert('Sign up successful, check your email for verification');
-            console.log(response);
-        } catch (error) {
-            console.log(error);
-            alert('Sign up failed: ' + error.message);
-        }
-        setLoading(false);
-    };
+    
 
     return (
         <View style={styles.container}>
@@ -54,9 +44,6 @@ const Login = () => {
                         <Pressable style={styles.button} onPress={signIn}>
                             <Text style={styles.text}>Login</Text>
                         </Pressable>
-                        <Pressable style={styles.button} onPress={signUp}>
-                            <Text style={styles.text}>Create Account</Text>
-                        </Pressable>
                     </>
                 )}
             </KeyboardAvoidingView>
@@ -67,7 +54,7 @@ const Login = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#8087F0',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',

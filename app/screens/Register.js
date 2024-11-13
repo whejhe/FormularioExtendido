@@ -1,10 +1,17 @@
+// app/screens/Register.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import * as yup from 'yup';
+import { Formik } from 'formik';
 import { getPaises } from '../../api/apiClient';
+import { useNavigation } from '@react-navigation/native';
 
 const Formulario = () => {
+
+    const navigation = useNavigation();
+
     const [paises, setPaises] = useState([]);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -12,7 +19,7 @@ const Formulario = () => {
     const [dia, setDia] = useState('');
     const [mes, setMes] = useState('');
     const [ano, setAno] = useState('');
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState('');
 
     const options = paises.map((pais) => ({ label: pais.name.common, value: pais.cca2 }));
 
@@ -31,7 +38,7 @@ const Formulario = () => {
         { label: 'Noviembre', value: 11 },
         { label: 'Diciembre', value: 12 },
     ];
-    const anos = Array.from({ length: 100 }, (_, i) => ({ label: `${i + 1900}`, value: i + 1900 }));
+    const anos = Array.from({ length: 100 }, (_, i) => ({ label: `${i + 1940}`, value: i + 1940 }));
 
 
     useEffect(() => {
@@ -42,25 +49,22 @@ const Formulario = () => {
         obtenerPaises();
     }, []);
 
-    const validateForm = () => {
-        if (name === '' || email === '' || selectedOption === null) {
-            return false;
-        }
-        return true;
-    };
+    const schema = yup.object().shape({
+        username: yup.string().required('Nombre de usuario es requerido'),
+        email: yup.string().email('Email no válido').required('Email es requerido'),
+        password: yup.string().min(6, 'La contraseña debe tener al menos 6 caracteres').required('Contraseña es requerida'),
+    });
 
     const guardarDatos = async () => {
-        if (!validateForm()) {
-            alert('Por favor, rellene todos los campos');
-            return;
-        }
         try {
-            await AsyncStorage.setItem('user', JSON.stringify({ name, email, selectedOption }));
-            console.log('Datos guardados correctamente');
+            await AsyncStorage.setItem('user', JSON.stringify({ name, email, password, selectedOption }));
+            alert('Registro exitoso. Ahora puede iniciar sesión.');
+            navigation.navigate('Login');
         } catch (error) {
             console.log('Error al guardar datos:', error);
         }
     };
+
 
     const leerDatos = async () => {
         try {
@@ -72,122 +76,175 @@ const Formulario = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput style={styles.input}
-                placeholder="Nombre"
-                value={name}
-                onChangeText={(text) => setName(text)}
-            />
-            <TextInput style={styles.input}
-                placeholder="Correo electrónico"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput style={styles.input}
-                secureTextEntry={true}
-                placeholder="Password"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-            />
-            <View style={styles.fechaContainer}>
-                <Text style={styles.fechaLabel}>Fecha de nacimiento</Text>
-                <View style={styles.fechaGroup}>
-                    <Dropdown
-                        label="Día"
-                        data={dias}
-                        onChange={(option) => setDia(option.value)}
-                        value={dia}
-                        placeholder="Seleccione el día"
-                        style={styles.fechaDropdown}
-                    />
-                    <Dropdown
-                        label="Mes"
-                        data={meses}
-                        onChange={(option) => setMes(option.value)}
-                        value={mes}
-                        placeholder="Seleccione el mes"
-                        style={styles.fechaDropdown}
-                    />
-                    <Dropdown
-                        label="Año"
-                        data={anos}
-                        onChange={(option) => setAno(option.value)}
-                        value={ano}
-                        placeholder="Seleccione el año"
-                        style={styles.fechaDropdown}
-                    />
+        <Formik
+            initialValues={{ name: '', email: '', password: '', selectedOption: '' }}
+            validationSchema={schema}
+            onSubmit={(values) => {
+                guardarDatos();
+            }}
+        >
+            <View style={styles.container}>
+                <TextInput style={styles.input}
+                    placeholder="Nombre"
+                    value={name}
+                    onChangeText={(text) => setName(text)}
+                />
+                <TextInput style={styles.input}
+                    placeholder="Correo electrónico"
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                />
+                <TextInput style={styles.input}
+                    secureTextEntry={true}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
+                />
+                <View style={styles.fechaContainer}>
+                    <Text style={styles.fechaLabel}>Fecha de nacimiento</Text>
+                    <View style={styles.fechaGroup}>
+                        <Dropdown
+                            label="Día"
+                            data={dias}
+                            onChange={(option) => setDia(option.value)}
+                            value={dia}
+                            placeholder="Día"
+                            style={styles.fechaDropdown}
+                            renderItem={(item) => (
+                                <Text style={styles.dropdownText}>{item.label}</Text>
+                            )}
+                        />
+                        <Dropdown
+                            label="Mes"
+                            data={meses}
+                            onChange={(option) => setMes(option.value)}
+                            value={mes}
+                            placeholder="Mes"
+                            style={styles.fechaDropdown}
+                            renderItem={(item) => (
+                                <Text style={styles.dropdownText}>{item.label}</Text>
+                            )}
+                        />
+                        <Dropdown
+                            label="Año"
+                            data={anos}
+                            onChange={(option) => setAno(option.value)}
+                            value={ano}
+                            placeholder="Año"
+                            style={styles.fechaDropdown}
+                            renderItem={(item) => (
+                                <Text style={styles.dropdownText}>{item.label}</Text>
+                            )}
+                        />
+                    </View>
                 </View>
+                <Text style={styles.paisLabel}>Pais</Text>
+                <Dropdown
+                    label="Select a country"
+                    data={options}
+                    onChange={(option) => setSelectedOption(option)}
+                    value={selectedOption}
+                    placeholder="Select a country"
+                    style={styles.dropdownPaises}
+                    renderItem={(item) => (
+                        <Text style={styles.dropdownText}>{item.label}</Text>
+                    )}
+                >
+                    {selectedOption && (
+                        <Text style={styles.dropdownSelectedItem}>{selectedOption.label}</Text>
+                    )}
+                </Dropdown>
+                <Pressable style={styles.button} onPress={guardarDatos}>
+                    <Text style={styles.textButton}>Guardar Datos</Text>
+                </Pressable>
+                <Pressable style={styles.button} onPress={leerDatos}>
+                    <Text style={styles.textButton}>Leer datos</Text>
+                </Pressable>
             </View>
-            <Dropdown
-                label="Select a country"
-                data={options}
-                onChange={(option) => setSelectedOption(option)}
-                value={selectedOption}
-                placeholder="Select a country"
-                style={styles.dropdown}
-                renderItem={(item) => (
-                    <Text style={styles.dropdownText}>{item.label}</Text>
-                )}
-            >
-                {selectedOption && (
-                    <Text style={styles.dropdownSelectedItem}>{selectedOption.label}</Text>
-                )}
-            </Dropdown>
-            <Pressable style={styles.button} onPress={guardarDatos}>
-                <Text style={styles.textButton}>Guardar Datos</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={leerDatos}>
-                <Text style={styles.textButton}>Leer datos</Text>
-            </Pressable>
-        </View>
+        </Formik>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#8087F0',
+        backgroundColor: '#F0F4F9',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
-        height: '100%',
+        padding: 20,
     },
     input: {
-        marginVertical: 4,
+        marginVertical: 8,
         height: 50,
-        width: 250,
-        borderWidth: 2,
-        borderRadius: 4,
+        width: '90%',
+        borderWidth: 1,
+        borderRadius: 8,
         padding: 10,
-        backgroundColor: '#fff',
-        borderColor: '#323446'
+        backgroundColor: '#FFFFFF',
+        borderColor: '#B0BEC5',
+        fontSize: 16,
+        color: '#37474F',
     },
     button: {
-        padding: 10,
-        backgroundColor: '#323446',
+        padding: 12,
+        backgroundColor: '#546E7A',
         borderRadius: 8,
-        marginVertical: 5,
-        borderWidth: 1,
-        borderColor: '#F0D262',
+        marginVertical: 8,
+        width: '90%',
+        alignItems: 'center',
     },
     textButton: {
-        color: 'white'
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     dropdown: {
-        height: 40,
-        width: 250,
-        marginVertical: 4,
-        borderWidth: 2,
-        borderRadius: 4,
-        backgroundColor: '#fff',
-        borderColor: '#323446',
-        color: 'blank'
+        marginVertical: 8,
+        height: 50,
+        width: '90%',
+        borderWidth: 1,
+        borderRadius: 8,
+        backgroundColor: '#FFFFFF',
+        borderColor: '#B0BEC5',
     },
-    dropdownText: {
-        color: 'black',
+    dropdownPaises:{
+        marginTop: 0,
+        marginBottom: 8,
+        height: 50,
+        width: '90%',
+        borderWidth: 1,
+        borderRadius: 8,
+        backgroundColor: '#FFFFFF',
+        borderColor: '#B0BEC5',
     },
     fechaGroup: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '90%',
+    },
+    fechaDropdown: {
+        width: '30%',
+    },
+    dropdownText: {
+        color: '#37474F',
+        fontSize: 16,
+    },
+    fechaLabel: {
+        alignSelf: 'flex-start',
+        marginBottom: 5,
+        fontSize: 16,
+        color: '#546E7A',
+        marginTop: 20
+    },
+    paisLabel: {
+        alignSelf: 'flex-start',
+        marginBottom: 5,
+        fontSize: 16,
+        color: '#546E7A',
+        paddingLeft: 20,
+        marginTop: 20
     }
 });
+
 
 export default Formulario;
